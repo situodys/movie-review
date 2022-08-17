@@ -1,12 +1,12 @@
 package com.example.mreview.global.dto;
 
+import com.example.mreview.domain.movie.dto.MovieListInfoDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 

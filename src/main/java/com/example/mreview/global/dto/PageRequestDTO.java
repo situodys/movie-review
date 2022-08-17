@@ -18,14 +18,15 @@ import java.util.Optional;
 @AllArgsConstructor
 public class PageRequestDTO {
 
-    private int page;
-    private int size;
-    private Long lastMno;
-    private Optional<Long> totalCount;
-    private String searchType;
-    private String keyword;
+    private Integer page;
+    private Integer size;
 
-    private Sort sort;
+    private Long totalCount;
+    private String title;
+    private String content;
+
+
+
 
 
 

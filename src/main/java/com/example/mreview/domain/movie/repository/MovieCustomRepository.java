@@ -1,12 +1,15 @@
 package com.example.mreview.domain.movie.repository;
 
-import com.example.mreview.global.dto.MovieListInfoDTO;
+import com.example.mreview.domain.movie.dto.MovieInfoDetailDTO;
+import com.example.mreview.domain.movie.dto.MovieListInfoDTO;
 import com.example.mreview.global.dto.PageRequestDTO;
-import com.example.mreview.global.dto.PageResponseDTO;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface MovieCustomRepository {
-    PageResponseDTO getListPage(PageRequestDTO pageRequestDTOo);
+    Page<MovieListInfoDTO> getListPage(PageRequestDTO pageRequestDTOo);
     Long getTotalCount();
+
+    List<MovieInfoDetailDTO> findMovieDetail(Long id);
 }

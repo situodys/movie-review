@@ -1,8 +1,7 @@
-package com.example.mreview.global.dto;
+package com.example.mreview.domain.movie.dto;
 
 import com.example.mreview.domain.movie.Movie;
 import com.example.mreview.domain.movieimage.MovieImage;
-import com.querydsl.core.Tuple;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,14 +13,11 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MovieListInfoDTO {
+public class MovieInfoDetailDTO {
+
     private Movie movie;
     private MovieImage movieImage;
-    private double starRating;
-    private int reviewCount;
+    private double rating;
+    private Long reviewCount;
 
-    public MovieListInfoDTO(List<Tuple> tuples) {
-        this.movie = (Movie) tuples.get(0);
-
-    }
 }

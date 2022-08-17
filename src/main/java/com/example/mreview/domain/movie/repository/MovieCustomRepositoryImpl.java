@@ -2,98 +2,107 @@ package com.example.mreview.domain.movie.repository;
 
 import static com.example.mreview.entity.QMovie.movie;
 
+import static com.example.mreview.entity.QMovieImage.movieImage;
 import static com.example.mreview.entity.QReview.review;
 
 import com.example.mreview.domain.movie.Movie;
-import com.example.mreview.global.dto.MovieListInfoDTO;
+import com.example.mreview.domain.movie.dto.MovieInfoDetailDTO;
+import com.example.mreview.domain.movie.dto.MovieListInfoDTO;
 import com.example.mreview.global.dto.PageRequestDTO;
 import com.example.mreview.global.dto.PageResponseDTO;
-import com.example.mreview.global.entity.SearchTypes;
-import com.example.mreview.global.entity.SearchValue;
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Predicate;
+import com.mysql.cj.util.StringUtils;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MovieCustomRepositoryImpl implements MovieCustomRepository {
+@Repository
+public class MovieCustomRepositoryImpl extends QuerydslRepositorySupport implements MovieCustomRepository {
 
-    @Autowired
-    private JPAQueryFactory jpaQueryFactory;
+    private final JPAQueryFactory jpaQueryFactory;
+
+    public MovieCustomRepositoryImpl(JPAQueryFactory jpaQueryFactory) {
+        super(Movie.class);
+        this.jpaQueryFactory = jpaQueryFactory;
+    }
 
     @Override
-    public PageResponseDTO getListPage(PageRequestDTO pageRequestDTO) {
+    public Page<MovieListInfoDTO> getListPage(PageRequestDTO pageRequestDTO) {
 
-        Long totalCount=0L;
-        String type = pageRequestDTO.getSearchType();
-        String keyword = pageRequestDTO.getKeyword();
+        PageRequest pageRequest = PageRequest.of(pageRequestDTO.getPage(), pageRequestDTO.getSize(), Sort.by("mno").descending());
 
-        if (pageRequestDTO.getTotalCount().isEmpty()) {
-            totalCount = getTotalCount();
-        }
-        List<Tuple> result = jpaQueryFactory.select(movie, review.grade.avg())
+        JPAQuery<MovieListInfoDTO> query = jpaQueryFactory.select(Projections.constructor(
+                        MovieListInfoDTO.class,
+                        movie,
+                        movieImage,
+                        review.grade.avg().coalesce(0.0),
+                        review.countDistinct()
+                ))
                 .from(movie)
+                .leftJoin(movieImage).on(movieImage.movie.eq(movie))
                 .leftJoin(review).on(review.movie.eq(movie))
                 .where(
-                        movie.mno.gt(pageRequestDTO.getLastMno()),
-                        getEqTitle(type, keyword)
+                        isTitleEq(pageRequestDTO.getTitle())
                 )
-                .orderBy(getOrderSpecifier(pageRequestDTO.getSort())
-                        .stream().toArray(OrderSpecifier[]::new))
-                .limit(pageRequestDTO.getSize())
-                .groupBy(movie)
-                .fetch()
-                .stream().map();
+                .groupBy(movie);
 
-        new PageResponseDTO(result, )
+        Long totalCount = pageRequestDTO.getTotalCount() == null ? query.fetch().size() : pageRequestDTO.getTotalCount();
 
-        return null;
+        List<MovieListInfoDTO> result = this.getQuerydsl().applyPagination(pageRequest, query).fetch();
+        return new PageImpl<>(result, pageRequest, totalCount);
     }
 
-    private List<OrderSpecifier> getOrderSpecifier(Sort sort) {
-        List<OrderSpecifier> orders = new ArrayList<>();
-
-        sort.stream().forEach(order->{
-            Order direction = order.isAscending() ? Order.ASC : Order.DESC;
-            String prop = order.getProperty();
-            PathBuilder orderExpression = new PathBuilder(Movie.class, "movie");
-            orders.add(new OrderSpecifier(direction, orderExpression.get(prop)));
-        });
-        return orders;
-    }
-
-//    private BooleanBuilder makeConditions(PageRequestDTO pageRequestDTO) {
-//        BooleanBuilder booleanBuilder = new BooleanBuilder();
+//    private List<OrderSpecifier> getOrderSpecifier(Sort sort) {
+//        List<OrderSpecifier> orders = new ArrayList<>();
 //
-//        booleanBuilder.and(movie.mno.gt(pageRequestDTO.getLastMno()));
-//
-//        String keyword = pageRequestDTO.getKeyword();
-//        if(keyword==null) return booleanBuilder;
-//        List<SearchValue> searchTypes = pageRequestDTO.getSearchTypes();
+//        sort.stream().forEach(order->{
+//            Order direction = order.isAscending() ? Order.ASC : Order.DESC;
+//            String prop = order.getProperty();
+//            PathBuilder orderExpression = new PathBuilder(Movie.class, "movie");
+//            orders.add(new OrderSpecifier(direction, orderExpression.get(prop)));
+//        });
+//        return orders;
 //    }
 
-    private BooleanExpression getEqTitle(String type, String keyword) {
-        if (type == null || !type.contains("t")) {
-            return null;
-        }
+    private BooleanExpression isTitleEq(String keyword) {
+        if (StringUtils.isNullOrEmpty(keyword)) return null;
         return movie.title.containsIgnoreCase(keyword);
     }
 
     @Override
     public Long getTotalCount() {
-        List<Long> result = jpaQueryFactory.select(movie.countDistinct())
+        Long fetchCount = jpaQueryFactory.select(movie.countDistinct())
                 .from(movie)
+                .fetchOne();
+        return fetchCount;
+    }
+
+    @Override
+    public List<MovieInfoDetailDTO> findMovieDetail(Long id) {
+
+        List<MovieInfoDetailDTO> results = jpaQueryFactory.select(
+                        Projections.constructor(
+                                MovieInfoDetailDTO.class,
+                                movie,
+                                movieImage,
+                                review.grade.avg().coalesce(0.0),
+                                review.countDistinct()
+                        ))
+                .from(movie)
+                .leftJoin(review).on(review.movie.eq(movie))
+                .leftJoin(movieImage).on(movieImage.movie.eq(movie))
+                .where(movie.mno.eq(id))
+                .groupBy(movieImage)
                 .fetch();
-        return result.get(0);
+        return results;
     }
 }
