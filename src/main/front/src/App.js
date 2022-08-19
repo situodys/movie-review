@@ -1,12 +1,20 @@
 import {useState} from "react";
 import axios from "axios";
 import {API_BASE_URL} from "./config/config";
-import Image from "./Image";
+import ImageList from "./ImageList";
 
 function App() {
 
+    // function showImages(arr) {
+    //
+    //     for(let i=0; i<arr.length;i++){
+    //         <Image
+    //     }
+    // }
+
     const [files, setFiles] = useState([]);
     const [images, setImages] = useState([]);
+    const data =[];
 
     const handleUpload = (e) => {
         e.preventDefault()
@@ -30,39 +38,37 @@ function App() {
             dataType: 'json'
         })
             .then(function (response) {
-                for (let t = 0; t < response.data.length; t++) {
-                    let url= response.data[t]['imageURL'];
-                    getImage(url);
-                }
+                console.log(response.data);
+                for(let i=0;i<response.data.length;i++)
+                setImages([...images, response.data[i].imageURL]);
             })
             .catch(function (error) {
                 console.log(error);
              });
-
     }
 
-    const getImage = (arr) =>{
-        axios({
-            method: 'get',
-            url: API_BASE_URL + '/display?fileName='+arr,
-            dataType: 'json'
-        })
-            .then(function (response) {
-                const divArea = getElementsById()
-                <Image name={response.data}/>
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-        // console.log(images[0]);
-    }
+    // const getImage = (arr) =>{
+    //     axios({
+    //         method: 'get',
+    //         url: API_BASE_URL + '/display?fileName='+arr,
+    //         responseType: 'blob'
+    //     })
+    //         .then(function (response) {
+    //             console.log(response)
+    //             setImages([...images,response.data])
+    //         })
+    //         .catch(function (error) {
+    //             console.log(error);
+    //         });
+    // }
     return (
         <div>
             <input name="uploadFiles" type="file" multiple onChange={handleUpload}/>
             <button className={"uploadBtn"} onClick={handleSubmit}>
                 Upload
             </button>
-            <div className={uploadResults}></div>
+            <div class ="uploadResult"></div>
+            <ImageList data={images}/>
         </div>
     );
 }

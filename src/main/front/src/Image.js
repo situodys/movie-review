@@ -1,7 +1,8 @@
-function Image(props){
+import {API_BASE_URL} from "./config/config";
 
-    console.log(props.name)
-    return <img src={props.name} />
+function Image(props){
+    console.log(API_BASE_URL+'/display?fileName='+props.url);
+    return <img src={API_BASE_URL+'/display?fileName='+props.url}/>
 }
 
 export default Image;
