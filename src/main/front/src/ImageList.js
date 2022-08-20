@@ -9,7 +9,7 @@ function ImageList(props) {
     const {data} = props;
     console.log(data);
     const list = data.map(
-        info => (<Image url={info}/>)
+        (info,i) => (<Image url={info.imageURL} key={i}/>)
     );
 
     return (

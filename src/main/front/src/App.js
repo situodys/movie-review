@@ -2,23 +2,17 @@ import {useState} from "react";
 import axios from "axios";
 import {API_BASE_URL} from "./config/config";
 import ImageList from "./ImageList";
+import Image from "./Image";
 
 function App() {
 
-    // function showImages(arr) {
-    //
-    //     for(let i=0; i<arr.length;i++){
-    //         <Image
-    //     }
-    // }
-
     const [files, setFiles] = useState([]);
     const [images, setImages] = useState([]);
-    const data =[];
 
     const handleUpload = (e) => {
         e.preventDefault()
         const file = e.target.files;
+        console.log(file);
         setFiles([file]);
     }
 
@@ -39,28 +33,13 @@ function App() {
         })
             .then(function (response) {
                 console.log(response.data);
-                for(let i=0;i<response.data.length;i++)
-                setImages([...images, response.data[i].imageURL]);
+                setImages(response.data);
             })
             .catch(function (error) {
                 console.log(error);
              });
     }
 
-    // const getImage = (arr) =>{
-    //     axios({
-    //         method: 'get',
-    //         url: API_BASE_URL + '/display?fileName='+arr,
-    //         responseType: 'blob'
-    //     })
-    //         .then(function (response) {
-    //             console.log(response)
-    //             setImages([...images,response.data])
-    //         })
-    //         .catch(function (error) {
-    //             console.log(error);
-    //         });
-    // }
     return (
         <div>
             <input name="uploadFiles" type="file" multiple onChange={handleUpload}/>
@@ -68,7 +47,11 @@ function App() {
                 Upload
             </button>
             <div class ="uploadResult"></div>
-            <ImageList data={images}/>
+            {
+                images&& images.map(
+                    item=>{ return <Image url={item.thumbnailURL}/>}
+                )
+            }
         </div>
     );
 }
