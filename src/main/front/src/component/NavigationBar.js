@@ -1,6 +1,6 @@
 import {AppBar, Button, Grid, Toolbar, Typography} from "@mui/material";
 
-function NavigationBar() {
+const NavigationBar = ()=> {
     return(
         <AppBar position={"static"}>
             <Toolbar>
