@@ -6,9 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @ToString(exclude = "movie")
 public class MovieImage {
@@ -21,8 +19,17 @@ public class MovieImage {
 
     private String imgName;
 
-    private String path;
+    private String imgPath;
 
     @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name= "movie_mno")
     private Movie movie;
+
+    @Builder
+    public MovieImage(String uuid, String imgName, String imgPath, Movie movie) {
+        this.uuid = uuid;
+        this.imgName = imgName;
+        this.imgPath = imgPath;
+        this.movie = movie;
+    }
 }
