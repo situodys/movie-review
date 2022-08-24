@@ -1,4 +1,4 @@
-import Image from "./Image";
+import Image from "./component/Image";
 import {useState} from "react";
 
 function ImageList(props) {
