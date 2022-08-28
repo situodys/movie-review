@@ -1,6 +1,7 @@
 package com.example.mreview.domain.movieimage;
 
-import com.example.mreview.domain.movie.Movie;
+import com.example.mreview.domain.movie.entity.Movie;
+import com.example.mreview.domain.movieimage.dto.MovieImageDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,5 +32,16 @@ public class MovieImage {
         this.imgName = imgName;
         this.imgPath = imgPath;
         this.movie = movie;
+    }
+
+    public MovieImageDTO toDTO() {
+        MovieImageDTO movieImageDTO = MovieImageDTO.builder()
+                .fileName(this.imgName)
+                .folderPath(this.imgPath)
+                .uuid(this.uuid)
+                .build();
+
+        movieImageDTO.changeMno(this.movie.getMno());
+        return movieImageDTO;
     }
 }

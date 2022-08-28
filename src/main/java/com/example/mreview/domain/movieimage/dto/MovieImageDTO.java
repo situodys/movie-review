@@ -1,6 +1,6 @@
 package com.example.mreview.domain.movieimage.dto;
 
-import com.example.mreview.domain.movie.Movie;
+import com.example.mreview.domain.movie.entity.Movie;
 import com.example.mreview.domain.movieimage.MovieImage;
 import com.mysema.commons.lang.Assert;
 import lombok.*;

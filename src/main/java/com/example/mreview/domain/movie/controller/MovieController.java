@@ -3,6 +3,8 @@ package com.example.mreview.domain.movie.controller;
 import com.example.mreview.domain.movie.dto.MovieDTO;
 import com.example.mreview.domain.movie.service.MovieService;
 import com.example.mreview.domain.movieimage.dto.MovieImageDTO;
+import com.example.mreview.global.dto.PageRequestDTO;
+import com.example.mreview.global.dto.PageResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -19,7 +21,7 @@ public class MovieController {
 
     @PostMapping("/add")
     public ResponseEntity<Long> add(@RequestBody MovieDTO movieDTO) {
-        log.info("movieDTO: {}",movieDTO);
+        log.info("movieDTO: {}", movieDTO);
 
         for (MovieImageDTO movieImageDTO : movieDTO.getMovieImageDTOList()) {
             System.out.println(movieImageDTO);
@@ -27,5 +29,12 @@ public class MovieController {
 
         Long mno = movieService.register(movieDTO);
         return new ResponseEntity<>(mno, HttpStatus.OK);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<PageResponseDTO> list(PageRequestDTO pageRequestDTO) {
+        log.info("pageRequestDTO: {}",pageRequestDTO);
+        PageResponseDTO result = movieService.getList(pageRequestDTO);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

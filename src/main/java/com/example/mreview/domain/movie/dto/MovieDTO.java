@@ -1,6 +1,6 @@
 package com.example.mreview.domain.movie.dto;
 
-import com.example.mreview.domain.movie.Movie;
+import com.example.mreview.domain.movie.entity.Movie;
 import com.example.mreview.domain.movieimage.MovieImage;
 import com.example.mreview.domain.movieimage.dto.MovieImageDTO;
 import com.mysema.commons.lang.Assert;
@@ -11,6 +11,7 @@ import lombok.ToString;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,8 +26,12 @@ public class MovieDTO implements Serializable {
 
     private List<MovieImageDTO> movieImageDTOList = new ArrayList<>();
 
+    private LocalDateTime regDate;
+    private LocalDateTime modDate;
+
+
     @Builder
-    public MovieDTO(Long mno, String title, List<MovieImageDTO> movieImageDTOList) {
+    public MovieDTO(Long mno, String title, List<MovieImageDTO> movieImageDTOList,LocalDateTime regDate,LocalDateTime modDate) {
 //        Assert.notNull(mno, "mno must not be null");
         Assert.hasText(title, "title must not be null");
 
@@ -35,6 +40,8 @@ public class MovieDTO implements Serializable {
         if (movieImageDTOList != null) {
             this.movieImageDTOList = movieImageDTOList;
         }
+        this.regDate = regDate;
+        this.modDate = modDate;
     }
 
     public Movie toEntity() {
@@ -51,6 +58,10 @@ public class MovieDTO implements Serializable {
             movie.initMovieImageLists(movieImageList);
         }
         return movie;
+    }
+
+    public void initMovieImageList(List<MovieImageDTO> movieImageDTOList) {
+        this.movieImageDTOList = movieImageDTOList;
     }
 
 }

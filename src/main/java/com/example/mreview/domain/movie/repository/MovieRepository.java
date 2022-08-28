@@ -1,7 +1,6 @@
 package com.example.mreview.domain.movie.repository;
 
-import com.example.mreview.domain.movie.Movie;
-import com.querydsl.core.types.dsl.BooleanExpression;
+import com.example.mreview.domain.movie.entity.Movie;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MovieRepository extends JpaRepository<Movie, Long>,MovieCustomRepository {

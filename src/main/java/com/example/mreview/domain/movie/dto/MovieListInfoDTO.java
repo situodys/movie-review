@@ -1,22 +1,26 @@
 package com.example.mreview.domain.movie.dto;
 
-import com.example.mreview.domain.movie.Movie;
-import com.example.mreview.domain.movieimage.MovieImage;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.example.mreview.domain.movieimage.dto.MovieImageDTO;
+import lombok.*;
+import org.springframework.util.Assert;
 
 
-@Builder
-@Data
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
+@ToString(exclude = "movieImageList")
 public class MovieListInfoDTO {
-    private Movie movie;
-    private MovieImage movieImage;
+    private MovieDTO movieDTO;
+    private MovieImageDTO movieImageDTO;
     private double starRating;
-    private Long reviewCount;
+    private long reviewCount;
 
+    @Builder
+    public MovieListInfoDTO(MovieDTO movieDTO, MovieImageDTO movieImageDTO, double starRating, long reviewCount) {
+        Assert.notNull(movieDTO, "movie must not be null");
 
+        this.movieDTO=movieDTO;
+        this.movieImageDTO = movieImageDTO;
+        this.starRating = starRating;
+        this.reviewCount = reviewCount;
+    }
 }

@@ -5,55 +5,54 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageResponseDTO {
+public class PageResponseDTO implements Serializable {
 
-    private List<MovieListInfoDTO> dtoList;
+    private List<MovieListInfoDTO> contents;
 
     private int totalPage;
-    private int page;
-    private int size;
+    private long totalResultsCount;
+    private int curPage;
+    private int pageSize;
 
-    private int start,end;
+    private int startIndex,endIndex;
 
     private boolean prev,next;
 
-    private Long lastMno;
-
     private List<Integer> pageList;
 
-    public PageResponseDTO(List<MovieListInfoDTO> result,PageRequestDTO pageRequestDTO, int totalPage) {
-        dtoList=result;
-        this.totalPage =totalPage;
-        makePageList(pageRequestDTO);
-        this.size = result.size();
+    @Builder
+    public PageResponseDTO(Page<MovieListInfoDTO> result, PageRequestDTO pageRequestDTO) {
+        this.contents=result.getContent();
+        this.totalPage = result.getTotalPages();
+        this.totalResultsCount = result.getTotalElements();
+        this.curPage=pageRequestDTO.getPage()+1;
+        makePageList();
     }
 
-    private void makePageList(PageRequestDTO pageRequestDTO) {
-        this.page=pageRequestDTO.getPage()+1;
+    private void makePageList() {
+        this.curPage = curPage;
+        this.totalResultsCount = totalResultsCount;
+        int tempEnd=(int)(Math.ceil(curPage/10.0))*10;
 
+        startIndex= tempEnd-9;
 
-        int tempEnd=(int)(Math.ceil(page/10.0))*10;
+        prev=startIndex>1;
 
-        start= tempEnd-9;
-
-        prev=start>1;
-
-        end=this.totalPage>tempEnd ? tempEnd : this.totalPage;
+        endIndex=this.totalPage>tempEnd ? tempEnd : this.totalPage;
 
         next=totalPage>tempEnd;
 
-        pageList= IntStream.rangeClosed(start,end).boxed().collect(Collectors.toList());
-
-        lastMno = dtoList.get(this.size).getMovie().getMno();
+        pageList= IntStream.rangeClosed(startIndex,endIndex).boxed().collect(Collectors.toList());
     }
 
 }
