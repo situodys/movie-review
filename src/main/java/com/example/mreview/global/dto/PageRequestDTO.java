@@ -21,7 +21,7 @@ public class PageRequestDTO implements Serializable {
     private String title;
 
     public Integer getPage() {
-        return page == null ? 0 : page;
+        return page == null ? 0 : page-1;
     }
 
     public Integer getSize() {
@@ -33,6 +33,6 @@ public class PageRequestDTO implements Serializable {
     }
 
     public String getTitle() {
-        return title;
+        return title=="" ? null : title;
     }
 }

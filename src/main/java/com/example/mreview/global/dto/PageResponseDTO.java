@@ -36,6 +36,7 @@ public class PageResponseDTO implements Serializable {
         this.totalPage = result.getTotalPages();
         this.totalResultsCount = result.getTotalElements();
         this.curPage=pageRequestDTO.getPage()+1;
+        this.pageSize = pageRequestDTO.getSize();
         makePageList();
     }
 

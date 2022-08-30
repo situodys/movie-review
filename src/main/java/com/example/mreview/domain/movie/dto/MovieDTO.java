@@ -3,6 +3,7 @@ package com.example.mreview.domain.movie.dto;
 import com.example.mreview.domain.movie.entity.Movie;
 import com.example.mreview.domain.movieimage.MovieImage;
 import com.example.mreview.domain.movieimage.dto.MovieImageDTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mysema.commons.lang.Assert;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +27,10 @@ public class MovieDTO implements Serializable {
 
     private List<MovieImageDTO> movieImageDTOList = new ArrayList<>();
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime regDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime modDate;
 
 
