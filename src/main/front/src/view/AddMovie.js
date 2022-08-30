@@ -86,6 +86,7 @@ const AddMovie = () => {
         })
             .then(function (response) {
                 console.log(response.data);
+                window.location.href = "/";
             })
             .catch(function (error) {
                 console.log(error);
