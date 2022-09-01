@@ -5,6 +5,7 @@ import App from "./App";
 import {Box} from "@mui/material";
 import Footer from "./component/Footer";
 import Home from "./view/Home";
+import ReadMovie from "./view/ReadMovie";
 
 function AppRouter() {
 
@@ -17,6 +18,8 @@ function AppRouter() {
                     <Routes>
                         <Route path ="/movie/register" element={<AddMovie/>}></Route>
                         <Route path ="/" element={<Home/>}></Route>
+                        <Route path ="/read" element={<ReadMovie/>}></Route>
+
                     </Routes>
                 </div>
                 <Box mt={5}>

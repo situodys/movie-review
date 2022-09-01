@@ -35,7 +35,7 @@ function Image(props) {
 
     return (
         <div>
-            <ClearIcon onClick={handleRemoveIcon}/>
+            {!props.flag &&<ClearIcon onClick={handleRemoveIcon}/>}
             <img style={{height: 200, width: 200, paddingTop: 65, borderRadius: '16px'}}
                  src={API_BASE_URL + '/display?fileName=' + thumbnail}/>
         </div>
