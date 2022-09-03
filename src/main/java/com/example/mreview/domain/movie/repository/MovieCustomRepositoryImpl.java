@@ -2,10 +2,13 @@ package com.example.mreview.domain.movie.repository;
 
 
 
-import com.example.mreview.domain.movie.entity.Movie;
 import com.example.mreview.domain.movie.dto.MovieInfoDetailDTO;
+import com.example.mreview.domain.movie.entity.Movie;
+import com.example.mreview.domain.movie.entity.MovieInfoDetail;
 import com.example.mreview.domain.movie.dto.MovieListInfoDTO;
 import com.example.mreview.domain.movie.entity.MovieListInfo;
+import com.example.mreview.domain.movieimage.MovieImage;
+import com.example.mreview.domain.movieimage.dto.MovieImageDTO;
 import com.example.mreview.global.dto.PageRequestDTO;
 import com.mysql.cj.util.StringUtils;
 import com.querydsl.core.types.Projections;
@@ -94,23 +97,23 @@ public class MovieCustomRepositoryImpl extends QuerydslRepositorySupport impleme
     }
 
     @Override
-    public MovieInfoDetailDTO findMovieDetail(Long id) {
+    public List<MovieInfoDetail> findMovieDetail(Long id) {
 
-        MovieInfoDetailDTO results = jpaQueryFactory.select(
+        List<MovieInfoDetail> results = jpaQueryFactory.select(
                         Projections.constructor(
-                                MovieInfoDetailDTO.class,
-                                movie.mno,
-                                movie.title,
+                                MovieInfoDetail.class,
+                                movie,
+                                movieImage,
                                 review.grade.avg().coalesce(0.0),
-                                review.countDistinct(),
-                                movie.movieImageLists
+                                review.countDistinct()
                         ))
                 .from(movie)
-                .leftJoin(review).on(review.movie.eq(movie))
                 .leftJoin(movie.movieImageLists,movieImage)
+                .leftJoin(review).on(review.movie.eq(movie))
                 .where(movie.mno.eq(id))
                 .groupBy(movieImage)
-                .fetchOne();
+                .fetch();
+
         return results;
     }
 

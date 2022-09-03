@@ -1,6 +1,7 @@
 package com.example.mreview.domain.movie.controller;
 
 import com.example.mreview.domain.movie.dto.MovieDTO;
+import com.example.mreview.domain.movie.dto.MovieInfoDetailDTO;
 import com.example.mreview.domain.movie.service.MovieService;
 import com.example.mreview.domain.movieimage.dto.MovieImageDTO;
 import com.example.mreview.global.dto.PageRequestDTO;
@@ -35,6 +36,14 @@ public class MovieController {
     public ResponseEntity<PageResponseDTO> list(PageRequestDTO pageRequestDTO) {
         log.info("pageRequestDTO: {}",pageRequestDTO);
         PageResponseDTO result = movieService.getList(pageRequestDTO);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping({"/read", "modify"})
+    public ResponseEntity<MovieInfoDetailDTO> read(Long mno) {
+        log.info("mno: {}", mno);
+
+        MovieInfoDetailDTO result = movieService.getMovie(mno);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
