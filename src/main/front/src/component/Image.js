@@ -5,8 +5,8 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 
 function Image(props) {
-    console.log(API_BASE_URL + '/display?fileName=' + props.imageURL);
-    console.log(props.imageURL);
+    // console.log(API_BASE_URL + '/display?fileName=' + props.imageURL);
+    // console.log(props.imageURL);
 
     const [thumbnail, setThumbnail] = useState(props.thumbnailURL);
 
@@ -36,8 +36,8 @@ function Image(props) {
     return (
         <div>
             {!props.flag &&<ClearIcon onClick={handleRemoveIcon}/>}
-            <img style={{height: 200, width: 200, paddingTop: 65, borderRadius: '16px'}}
-                 src={API_BASE_URL + '/display?fileName=' + thumbnail}/>
+            {!thumbnail.includes("test")&&<img style={{height: 200, width: 200, paddingTop: 65, borderRadius: '16px'}}
+                 src={API_BASE_URL + '/display?fileName=' + thumbnail}/>}
         </div>
     )
 }
