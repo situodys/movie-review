@@ -25,7 +25,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.mreview.domain.movie.QMovie.movie;
+import static com.example.mreview.domain.movie.entity.QMovie.movie;
 import static com.example.mreview.domain.movieimage.QMovieImage.movieImage;
 import static com.example.mreview.domain.review.QReview.review;
 
