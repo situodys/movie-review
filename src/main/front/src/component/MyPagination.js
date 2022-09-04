@@ -45,7 +45,7 @@ export default function MyPagination(props) {
                     onClick={(e) => handleClick(e, props.movieLists.startIndex - 1)}
                     style={{fontSize: "x-large", width: "50px", height: "50px"}}>prev</Link>
             }
-            {props.movieLists && props.movieLists.pageList.map((idx) => (
+            {props.movieLists && props.movieLists.pageList && props.movieLists.pageList.map((idx) => (
                 <Link
                     onClick={(e) => handleClick(e, idx)}
                     style={{

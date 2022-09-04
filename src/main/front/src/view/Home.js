@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import {
     Button,
@@ -127,7 +127,7 @@ const Home = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {movieLists && movieLists.contents.map((movieList) => (
+                        {movieLists && movieLists.contents && movieLists.contents.map((movieList) => (
                             <StyledTableRow key={movieList.name} component={Link} to={`/read`} state={{mno: `${movieList.movieDTO.mno}`}}>
                                 <StyledTableCell
                                     style={{width: '200px'}}>{!movieList.movieImageDTO.thumbnailURL.includes("test") &&
