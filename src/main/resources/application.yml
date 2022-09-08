@@ -6,12 +6,6 @@ spring:
     password: bootuser
     thymeleaf:
       cache: false
-  servlet:
-    multipart:
-      enabled: true
-      location: "E:/spring/goocodan/upload/"
-      max-request-size: 30MB
-      max-file-size: 10MB
 
   jpa:
     show-sql: true
@@ -20,6 +14,51 @@ spring:
     properties:
       hibernate.format_sql: true
     database: mysql
+
+  servlet:
+    multipart:
+      enabled: true
+      location: "/home/ubuntu/images/"
+      max-request-size: 30MB
+      max-file-size: 10MB
+  config:
+    activate:
+      on-profile: "prod"
+
+custom:
+  upload:
+    path: "/home/ubuntu/images/"
+
+
+---
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/bootex
+    username: bootuser
+    password: bootuser
+    thymeleaf:
+      cache: false
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.format_sql: true
+    database: mysql
+
+  servlet:
+    multipart:
+      enabled: true
+      location: "E:/spring/goocodan/upload/"
+      max-request-size: 30MB
+      max-file-size: 10MB
+  config:
+    activate:
+      on-profile: "dev"
 
 custom:
   upload:
